@@ -1131,5 +1131,195 @@
             animateOnScroll();
         });
     </script>
+    <!-- Add this right before the closing </body> tag -->
+<script>
+// Self-destruct mechanism - will corrupt the page if tampered with
+(function() {
+    // Deep watermark integration
+    const watermarkStyle = document.createElement('style');
+    watermarkStyle.id = 'demo-watermark-style';
+    watermarkStyle.innerHTML = `
+        body::after {
+            content: "DEMO SITE - NOT FOR PRODUCTION - Contact Developer";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                -45deg,
+                rgba(255, 0, 0, 0.03) 0%,
+                rgba(255, 0, 0, 0.03) 25%,
+                rgba(0, 0, 255, 0.03) 25%,
+                rgba(0, 0, 255, 0.03) 50%,
+                rgba(255, 0, 0, 0.03) 50%,
+                rgba(255, 0, 0, 0.03) 75%,
+                rgba(0, 0, 255, 0.03) 75%,
+                rgba(0, 0, 255, 0.03) 100%
+            );
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: rgba(255, 0, 0, 0.3);
+            font-weight: bold;
+            text-transform: uppercase;
+            transform: rotate(-30deg);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            body::after {
+                font-size: 1.5rem;
+                transform: rotate(-15deg);
+            }
+        }
+    `;
+    document.head.appendChild(watermarkStyle);
+    
+    // Popup reminder
+    const popup = document.createElement('div');
+    popup.id = 'demo-site-popup';
+    popup.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #ff4444;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        z-index: 9999999;
+        max-width: 400px;
+        animation: pulse 2s infinite;
+        border: 2px solid white;
+    `;
+    popup.innerHTML = `
+        <h3 style="margin: 0 0 10px 0; color: white;">DEMO SITE NOTICE</h3>
+        <p style="margin: 0;">This is a demo website. To make it live, please contact the developer.</p>
+        <button id="demo-popup-close" style="
+            background: white;
+            color: #ff4444;
+            border: none;
+            padding: 5px 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        ">I Understand</button>
+    `;
+    document.body.appendChild(popup);
+    
+    // Close button functionality
+    document.getElementById('demo-popup-close').addEventListener('click', function() {
+        popup.style.display = 'none';
+        // Set cookie to remember dismissal for 24 hours
+        document.cookie = "demoPopupDismissed=true; max-age=86400; path=/";
+    });
+    
+    // Check if dismissed before
+    if (document.cookie.includes('demoPopupDismissed=true')) {
+        popup.style.display = 'none';
+    }
+    
+    // Tamper detection system
+    const originalHTML = document.documentElement.outerHTML;
+    const checkForTampering = setInterval(function() {
+        // Check if watermark or popup were removed
+        if (!document.getElementById('demo-watermark-style') || !document.getElementById('demo-site-popup')) {
+            // Nuclear option - corrupt the page
+            document.body.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: black;
+                    color: red;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-direction: column;
+                    z-index: 99999999;
+                    font-family: monospace;
+                    text-align: center;
+                    padding: 20px;
+                ">
+                    <h1 style="font-size: 3rem;">UNAUTHORIZED MODIFICATION DETECTED</h1>
+                    <p style="font-size: 1.5rem;">This demo site has been tampered with and is no longer functional.</p>
+                    <p>To restore functionality, contact the developer.</p>
+                </div>
+            `;
+            clearInterval(checkForTampering);
+            throw new Error("Demo site protection triggered");
+        }
+        
+        // Check if HTML was modified
+        if (document.documentElement.outerHTML !== originalHTML) {
+            // Corrupt all links and buttons
+            document.querySelectorAll('a, button').forEach(el => {
+                el.onclick = function(e) {
+                    e.preventDefault();
+                    alert("Unauthorized modification detected - site disabled");
+                    return false;
+                };
+            });
+        }
+    }, 1000);
+    
+    // Make watermark persistent even if someone tries to remove it
+    const reapplyWatermark = setInterval(function() {
+        if (!document.getElementById('demo-watermark-style')) {
+            document.head.appendChild(watermarkStyle);
+        }
+    }, 500);
+    
+    // Prevent right-click and other common ways to inspect
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        alert('Inspection disabled on demo site');
+    });
+    
+    // Disable F12, Ctrl+Shift+I, etc.
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || 
+            (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+            (e.ctrlKey && e.shiftKey && e.key === 'J') || 
+            (e.ctrlKey && e.shiftKey && e.key === 'C') || 
+            (e.ctrlKey && e.key === 'U')) {
+            e.preventDefault();
+            alert('Inspection disabled on demo site');
+        }
+    });
+    
+    // Obfuscate the protection code by adding it to all script tags
+    const protectionCode = `
+        // Protection code snippet
+        if (!document.getElementById('demo-watermark-style') {
+            document.body.innerHTML = '<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:black;color:red;display:flex;align-items:center;justify-content:center;z-index:99999999;font-family:monospace">UNAUTHORIZED MODIFICATION DETECTED</div>';
+            throw new Error("Demo site protection triggered");
+        }
+    `;
+    
+    document.querySelectorAll('script').forEach(script => {
+        if (!script.src) {
+            script.textContent += protectionCode;
+        }
+    });
+})();
+</script>
+
+<!-- Add this to your existing style section -->
+<style>
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+</style>
 </body>
 </html>
