@@ -1072,65 +1072,7 @@
         </div>
     </footer>
 
-    <script>
-        // Mobile Navigation
-        const hamburger = document.getElementById('hamburger');
-        const nav = document.getElementById('nav');
-        
-        hamburger.addEventListener('click', () => {
-            nav.classList.toggle('active');
-            hamburger.innerHTML = nav.classList.contains('active') ? 
-                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-        });
-        
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                if (nav.classList.contains('active')) {
-                    nav.classList.remove('active');
-                    hamburger.innerHTML = '<i class="fas fa-bars"></i>';
-                }
-                
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-        
-        // Header scroll effect
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('header');
-            header.classList.toggle('scrolled', window.scrollY > 50);
-        });
-        
-        // Animation on scroll
-        const animateOnScroll = () => {
-            const elements = document.querySelectorAll('.service-card, .feature-item, .about-text, .about-image');
-            
-            elements.forEach(element => {
-                const elementPosition = element.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.2;
-                
-                if (elementPosition < screenPosition) {
-                    element.classList.add('visible');
-                }
-            });
-        };
-        
-        window.addEventListener('scroll', animateOnScroll);
-        window.addEventListener('load', animateOnScroll);
-        
-        // Initialize animations on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Trigger header scroll effect in case page loads scrolled
-            window.dispatchEvent(new Event('scroll'));
-            
-            // Show any elements that are already in view
-            animateOnScroll();
-        });
-    </script>
+
     <!-- Add this right before the closing </body> tag -->
 <script>
 // Self-destruct mechanism - will corrupt the page if tampered with
